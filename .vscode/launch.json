@@ -52,10 +52,10 @@
             "miDebuggerPath": "/usr/bin/gdb"
         },
         {
-            "name": "extras_cpp_app",
+            "name": "sample_app_app",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/extras_cpp_app",
+            "program": "${workspaceFolder}/build/sample_app_app",
             "args": [
                 "data/pgn/kasparov_muratkuliev_1973.PGN"
             ],
@@ -75,10 +75,10 @@
             "miDebuggerPath": "/usr/bin/gdb"
         },
         {
-            "name": "extras_cpp_app_i386",
+            "name": "sample_app_app_i386",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/extras_cpp_app_i386",
+            "program": "${workspaceFolder}/build/sample_app_app_i386",
             "args": [
                 "data/pgn/kasparov_muratkuliev_1973.PGN"
             ],

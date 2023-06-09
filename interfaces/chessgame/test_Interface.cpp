@@ -24,15 +24,15 @@
  */
 
 #include <iostream>
-#include <extras_cpp/game/interface.hpp>
+#include <sample_app/game/interface.hpp>
 
 #include "../../test/vendor/catch.hpp"
 
-using namespace extras;
-using namespace extras::cpp;
+using namespace sample;
+using namespace sample::app;
 
 /**
- *    Mold<cpp::cpp::game::Interface> dock;
+ *    Mold<cpp::app::game::Interface> dock;
  *
  *    (aka. mold the cpp::ChessGame interface to this dock)
  *
@@ -46,8 +46,8 @@ using namespace extras::cpp;
  *
  */
 
-namespace extras {
-    namespace cpp {
+namespace sample {
+    namespace app {
         namespace game {
 
             void test(Interface& i) {

@@ -35,10 +35,10 @@ include(cmake/CPM.cmake)
 include(cmake/print.cmake)
 include(cmake/utils.cmake)
 include(cmake/Find32or64bit.cmake)
-extras_cpp_get_version()
+sample_app_get_version()
 project(
-  extras_cpp
-  VERSION ${EXTRAS_CPP_VERSION}
+  sample_app
+  VERSION ${SAMPLE_APP_VERSION}
   LANGUAGES CXX
 )
 
@@ -82,19 +82,19 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic -fPIC")
 #
 # NOTE: add additional project options
 #
-option(EXTRAS_CPP_PRODUCTION "Production build" OFF)
+option(SAMPLE_APP_PRODUCTION "Production build" OFF)
 
 #
-# MAKE_EXTRAS_CPP_LIBRARY_ONLY
+# MAKE_SAMPLE_APP_LIBRARY_ONLY
 #
 # Quite often when you include a library from a github project, (via CPM)
 # all you are interested in are the shared library files. When you use this
 # flag you have to set it on any executables (see below) that you setup
 # and/or wish to make optional. Mind you, this option has not been fully
-# tested for use with EXTRAS_CPP_PRODUCTION flag. So, there might be 
+# tested for use with SAMPLE_APP_PRODUCTION flag. So, there might be 
 # a hiccup in here that needs to be worked out, (reader beware).
 #
-# see also MAKE_EXTRAS_CPP_LIBRARY_TOOLS
+# see also MAKE_SAMPLE_APP_LIBRARY_TOOLS
 #
 # This second flag will allow both the shared libraries and any executatbles
 # (but not the unit tests) to be compiled.
@@ -102,11 +102,11 @@ option(EXTRAS_CPP_PRODUCTION "Production build" OFF)
 # Using these flags speeds up the CPM inclusions in other projects significantly.
 #
 
-message(STATUS "MAKE_EXTRAS_CPP_LIBRARY_ONLY is ${MAKE_EXTRAS_CPP_LIBRARY_ONLY}")
-if(MAKE_EXTRAS_CPP_LIBRARY_ONLY)
+message(STATUS "MAKE_SAMPLE_APP_LIBRARY_ONLY is ${MAKE_SAMPLE_APP_LIBRARY_ONLY}")
+if(MAKE_SAMPLE_APP_LIBRARY_ONLY)
   option(BUILD_TESTS "Build tests" OFF)
   option(DEBUG "Debug Build" OFF)
-  set(EXTRAS_CPP_TESTS OFF)
+  set(SAMPLE_APP_TESTS OFF)
   message(STATUS "BUILD_TESTS is ${BUILD_TESTS}")
   message(STATUS "DEBUG is ${DEBUG}")
 else()
@@ -116,17 +116,17 @@ else()
   message(STATUS "DEBUG is ${DEBUG}")
 
   #
-  # NOTE: Build defaults to production, cmake -DEXTRAS_CPP_PRODUCTION=OFF will build debug with tests
+  # NOTE: Build defaults to production, cmake -DSAMPLE_APP_PRODUCTION=OFF will build debug with tests
   #
-  if(NOT EXTRAS_CPP_PRODUCTION)
+  if(NOT SAMPLE_APP_PRODUCTION)
     print(STATUS "Building ${PROJECT_NAME}-${PROJECT_VERSION} [DEBUG]")
     set(CMAKE_BUILD_TYPE Debug)
-    set(EXTRAS_CPP_TESTS ON)
+    set(SAMPLE_APP_TESTS ON)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
   else()
     print(STATUS "Building ${PROJECT_NAME}-${PROJECT_VERSION} [RELEASE]")
-    set(EXTRAS_CPP_TESTS OFF)
+    set(SAMPLE_APP_TESTS OFF)
     set(CMAKE_BUILD_TYPE Release)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
@@ -144,7 +144,7 @@ print(STATUS "CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}")
 
 #
 # NOTE: "Include 3rd party libraries, Perry and I maintain an open-source extras C++ library, which
-# is used extensively in extras_cpp, it comes bundled with spdlog, cpr, and nlohmann json. extras has
+# is used extensively in sample_app, it comes bundled with spdlog, cpr, and nlohmann json. extras has
 # project options that allow us to control how other libraries it includes are built. for example we
 # can tell extras to build spdlog as a static library (for faster compile times) by settings
 # MAKE_SPDLOG_SHARED OFF" -- Matt Williams, October, 2021
@@ -181,8 +181,8 @@ endif()
 #
 # HACK: glob src files and header files
 #
-file(GLOB_RECURSE EXTRAS_CPP_HEADERS CONFIGURE_DEPENDS "${INCLUDES}/${PROJECT_NAME}/*.hpp")
-file(GLOB_RECURSE EXTRAS_CPP_SOURCE CONFIGURE_DEPENDS "${SOURCES}/*.cpp")
+file(GLOB_RECURSE SAMPLE_APP_HEADERS CONFIGURE_DEPENDS "${INCLUDES}/${PROJECT_NAME}/*.hpp")
+file(GLOB_RECURSE SAMPLE_APP_SOURCE CONFIGURE_DEPENDS "${SOURCES}/*.cpp")
 
 #
 # NOTE: declare libraries here all source should be placed into a single library, (whether they be
@@ -190,30 +190,30 @@ file(GLOB_RECURSE EXTRAS_CPP_SOURCE CONFIGURE_DEPENDS "${SOURCES}/*.cpp")
 #
 
 # 
-# EXTRAS_CPP_THIRD_PARTY_LIBRARIES
+# SAMPLE_APP_THIRD_PARTY_LIBRARIES
 #
 # list here any 3rd party libraries that you want that were
 # installed using sudo apt install ....
 #
-# set(EXTRAS_CPP_THIRD_PARTY_LIBRARIES ldap gcrypt gnutls uuid microhttpd)
-set(EXTRAS_CPP_LIBS_COMMON stdc++fs ${EXTRAS_CPP_THIRD_PARTY_LIBRARIES} Threads::Threads)
+# set(SAMPLE_APP_THIRD_PARTY_LIBRARIES ldap gcrypt gnutls uuid microhttpd)
+set(SAMPLE_APP_LIBS_COMMON stdc++fs ${SAMPLE_APP_THIRD_PARTY_LIBRARIES} Threads::Threads)
 
 if (MAKE32BIT)
-set(EXTRAS_CPP_LIBS_NEEDED_i386 extras_i386 injections_i386 ${EXTRAS_CPP_LIBS_COMMON})
-add_library(${PROJECT_NAME}_i386 SHARED ${EXTRAS_CPP_HEADERS} ${EXTRAS_CPP_SOURCE})
+set(SAMPLE_APP_LIBS_NEEDED_i386 extras_i386 injections_i386 ${SAMPLE_APP_LIBS_COMMON})
+add_library(${PROJECT_NAME}_i386 SHARED ${SAMPLE_APP_HEADERS} ${SAMPLE_APP_SOURCE})
 set_target_properties(${PROJECT_NAME}_i386 PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(${PROJECT_NAME}_i386 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" ${ORACLE_INCLUDE})
-target_link_libraries(${PROJECT_NAME}_i386 PRIVATE ${EXTRAS_CPP_LIBS_NEEDED_i386})
+target_link_libraries(${PROJECT_NAME}_i386 PRIVATE ${SAMPLE_APP_LIBS_NEEDED_i386})
 target_compile_options(${PROJECT_NAME}_i386 PUBLIC -m32)
 target_link_options(${PROJECT_NAME}_i386 PRIVATE -m32)
 endif()
 
 if (MAKE64BIT)
-set(EXTRAS_CPP_LIBS_NEEDED extras injections ${EXTRAS_CPP_LIBS_COMMON})
-add_library(${PROJECT_NAME} SHARED ${EXTRAS_CPP_HEADERS} ${EXTRAS_CPP_SOURCE})
+set(SAMPLE_APP_LIBS_NEEDED extras injections ${SAMPLE_APP_LIBS_COMMON})
+add_library(${PROJECT_NAME} SHARED ${SAMPLE_APP_HEADERS} ${SAMPLE_APP_SOURCE})
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include" ${ORACLE_INCLUDE})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${EXTRAS_CPP_LIBS_NEEDED})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SAMPLE_APP_LIBS_NEEDED})
 endif()
 
 #
@@ -227,23 +227,23 @@ endif()
 # decide to add either your own Oracle macro or another 3rd party library
 #
 
-if (NOT MAKE_EXTRAS_CPP_LIBRARY_ONLY)
-  if(EXTRAS_CPP_TESTS)
+if (NOT MAKE_SAMPLE_APP_LIBRARY_ONLY)
+  if(SAMPLE_APP_TESTS)
     print(STATUS "Building tests")
-    file(GLOB_RECURSE EXTRAS_CPP_TESTS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/interfaces/*.cpp")
+    file(GLOB_RECURSE SAMPLE_APP_TESTS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/interfaces/*.cpp")
     set(TEST_EXEC "run-unittests-${PROJECT_NAME}")
 
     if (MAKE32BIT)
-      add_executable(${TEST_EXEC}_i386 ${EXTRAS_CPP_TESTS})
+      add_executable(${TEST_EXEC}_i386 ${SAMPLE_APP_TESTS})
       target_include_directories(${TEST_EXEC}_i386 PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
-      target_link_libraries(${TEST_EXEC}_i386 ${PROJECT_NAME}_i386 ${EXTRAS_CPP_LIBS_NEEDED_i386})
+      target_link_libraries(${TEST_EXEC}_i386 ${PROJECT_NAME}_i386 ${SAMPLE_APP_LIBS_NEEDED_i386})
       target_compile_options(${TEST_EXEC}_i386 PUBLIC -m32)
       target_link_options(${TEST_EXEC}_i386 PRIVATE -m32)
     endif()
     if (MAKE64BIT)
-      add_executable(${TEST_EXEC} ${EXTRAS_CPP_TESTS})
+      add_executable(${TEST_EXEC} ${SAMPLE_APP_TESTS})
       target_include_directories(${TEST_EXEC} PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
-      target_link_libraries(${TEST_EXEC} PRIVATE ${PROJECT_NAME} ${EXTRAS_CPP_LIBS_NEEDED})
+      target_link_libraries(${TEST_EXEC} PRIVATE ${PROJECT_NAME} ${SAMPLE_APP_LIBS_NEEDED})
     endif()
 
   endif()
@@ -255,22 +255,22 @@ endif()
 # includes ALL headers and sources under include/ and src/. So, to keep two or more main() 
 # declarations seperate, we place any sources that have a main() in the instances/ folder
 #
-if( NOT MAKE_EXTRAS_CPP_LIBRARY_ONLY OR MAKE_EXTRAS_CPP_LIBRARY_TOOLS)
+if( NOT MAKE_SAMPLE_APP_LIBRARY_ONLY OR MAKE_SAMPLE_APP_LIBRARY_TOOLS)
 
   #
-  # extras_cpp_app
+  # sample_app_app
   #
   if (MAKE32BIT)
-    add_executable(extras_cpp_app_i386 instances/extras_cpp_app.cpp) 
-    target_include_directories(extras_cpp_app_i386 PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
-    target_link_libraries(extras_cpp_app_i386 PRIVATE ${PROJECT_NAME}_i386 ${EXTRAS_CPP_LIBS_NEEDED_i386})
-    target_compile_options(extras_cpp_app_i386 PUBLIC -m32)
-    target_link_options(extras_cpp_app_i386 PRIVATE -m32)
+    add_executable(sample_app_app_i386 instances/sample_app_app.cpp) 
+    target_include_directories(sample_app_app_i386 PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
+    target_link_libraries(sample_app_app_i386 PRIVATE ${PROJECT_NAME}_i386 ${SAMPLE_APP_LIBS_NEEDED_i386})
+    target_compile_options(sample_app_app_i386 PUBLIC -m32)
+    target_link_options(sample_app_app_i386 PRIVATE -m32)
   endif()
   if (MAKE64BIT)
-    add_executable(extras_cpp_app instances/extras_cpp_app.cpp) 
-    target_include_directories(extras_cpp_app PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
-    target_link_libraries(extras_cpp_app PRIVATE ${PROJECT_NAME} ${EXTRAS_CPP_LIBS_NEEDED})
+    add_executable(sample_app_app instances/sample_app_app.cpp) 
+    target_include_directories(sample_app_app PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
+    target_link_libraries(sample_app_app PRIVATE ${PROJECT_NAME} ${SAMPLE_APP_LIBS_NEEDED})
   endif()
 
   # #
@@ -278,15 +278,15 @@ if( NOT MAKE_EXTRAS_CPP_LIBRARY_ONLY OR MAKE_EXTRAS_CPP_LIBRARY_TOOLS)
   # #
   # if (MAKE32BIT)
   #   add_executable(your_app_here_i386 instances/your_app_here.cpp) 
-  #   target_include_directories(extras_cpp_app_i386 PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
-  #   target_link_libraries(extras_cpp_app_i386 PRIVATE ${PROJECT_NAME}_i386 ${EXTRAS_CPP_LIBS_NEEDED_i386})
-  #   target_compile_options(extras_cpp_app_i386 PUBLIC -m32)
-  #   target_link_options(extras_cpp_app_i386 PRIVATE -m32)
+  #   target_include_directories(sample_app_app_i386 PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
+  #   target_link_libraries(sample_app_app_i386 PRIVATE ${PROJECT_NAME}_i386 ${SAMPLE_APP_LIBS_NEEDED_i386})
+  #   target_compile_options(sample_app_app_i386 PUBLIC -m32)
+  #   target_link_options(sample_app_app_i386 PRIVATE -m32)
   # endif()
   # if (MAKE64BIT)
   #   add_executable(your_app_here instances/your_app_here.cpp) 
-  #   target_include_directories(extras_cpp_app PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
-  #   target_link_libraries(extras_cpp_app PRIVATE ${PROJECT_NAME} ${EXTRAS_CPP_LIBS_NEEDED})
+  #   target_include_directories(sample_app_app PUBLIC ${INCLUDES} ${ORACLE_INCLUDE})
+  #   target_link_libraries(sample_app_app PRIVATE ${PROJECT_NAME} ${SAMPLE_APP_LIBS_NEEDED})
   # endif()
 
 endif()

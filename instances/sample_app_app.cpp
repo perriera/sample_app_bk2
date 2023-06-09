@@ -1,5 +1,5 @@
 /**
- * @file extras_cpp_app.cpp
+ * @file sample_app_app.cpp
  * @author your name (you@domain.com)
  * @brief
  * @version 0.1
@@ -11,9 +11,9 @@
  */
 
 #include <iostream>
-#include <extras_cpp/game/clazz.hpp>
+#include <sample_app/game/clazz.hpp>
 
-using namespace extras::cpp;
+using namespace sample::app;
 
 int main(int, const char**)
 {

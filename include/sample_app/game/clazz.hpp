@@ -10,8 +10,8 @@
  *
  */
 
-#ifndef _EXTRAS_CPP_CHESSGAME_CLAZZ_HPP
-#define _EXTRAS_CPP_CHESSGAME_CLAZZ_HPP
+#ifndef _SAMPLE_APP_CHESSGAME_CLAZZ_HPP
+#define _SAMPLE_APP_CHESSGAME_CLAZZ_HPP
 
  /**
   * @brief The MIT License (MIT)
@@ -38,10 +38,10 @@
   */
 
 #include <iostream>
-#include <extras_cpp/game/interface.hpp>
+#include <sample_app/game/interface.hpp>
 
-namespace extras {
-    namespace cpp {
+namespace sample {
+    namespace app {
         namespace game
         {
 
@@ -87,4 +87,4 @@ namespace extras {
     } // end namespace 
 }
 
-#endif // _EXTRAS_CPP_CHESSGAME_CLAZZ_HPP
+#endif // _SAMPLE_APP_CHESSGAME_CLAZZ_HPP
